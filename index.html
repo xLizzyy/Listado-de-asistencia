@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h2>Asistencias</h2>
+        <p><strong>Asistieron:</strong> {{ totalAsistieron }}</p>
+        <p><strong>No asistieron:</strong> {{ totalNoAsistieron }}</p>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Control Asistencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(persona, index) in personas" :key="index" :class="getClass(asistencias[index])">
+                    <td>{{ persona.nombre }}</td>
+                    <td>{{ persona.apellido }}</td>
+                    <td>
+                        <input type="radio" :name="'asistencia-' + index" value="asistio" v-model="asistencias[index]"> Asistió
+                        <input type="radio" :name="'asistencia-' + index" value="no-asistio" v-model="asistencias[index]"> No Asistió
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                personas: [
+                    { nombre: 'Luis', apellido: 'Hernández' },
+                    { nombre: 'Pedro', apellido: 'Pérez' },
+                    { nombre: 'Ana', apellido: 'Gómez' },
+                    { nombre: 'María', apellido: 'López' }
+                ],
+                asistencias: {} // Objeto para guardar el estado de asistencia de cada persona
+            };
+        },
+        computed: {
+            totalAsistieron() {
+                return Object.values(this.asistencias).filter(value => value === 'asistio').length;
+            },
+            totalNoAsistieron() {
+                return Object.values(this.asistencias).filter(value => value === 'no-asistio').length;
+            }
+        },
+        methods: {
+            getClass(asistencia) {
+                if (asistencia === 'asistio') {
+                    return 'asistio';
+                } else if (asistencia === 'no-asistio') {
+                    return 'no-asistio';
+                }
+                return ''; // Sin clase por defecto
+            }
+        }
+    }).mount('#app');
+    </script>
+</body>
+</html>
